@@ -41,4 +41,17 @@ public class CustomerRepository : ICustomerRepository
         _dbContext.Customers.Remove(customer);
         _dbContext.SaveChanges();
     }
+
+    public void UpdateCustomerById(int customerId, Customer data)
+    {
+        var temp = _dbContext.Customers.Where(c => c.Id == customerId).FirstOrDefault();
+
+        temp.DateOfBirth = data.DateOfBirth;
+        temp.IsFilipino = data.IsFilipino;
+        temp.FirstName = data.FirstName;
+        temp.LastName = data.LastName;
+        temp.MiddleName = data.MiddleName;
+        
+        
+    }
 }

@@ -5,7 +5,7 @@ public interface ICustomerRepository
     void CreateCustomer(Customer customer);
 
     // 2) There should be an API endpoint for updating an existing Customer based on the CustomerId parameter (if the Customer doesn't exist, return an error with HTTP Status Code 400)
-    //void UpdateCustomer(Customer customer);
+    void UpdateCustomer(int customerId, Customer data);
 
     // 3) There should be an API endpoint for deleting an existing Customer based on the CustomerId parameter (if the Customer doesn't exist, return an error with HTTP Status Code 400)
     void DeleteCustomer(int customerId);

@@ -1,5 +1,6 @@
 
 using System.Net;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.JSInterop.Infrastructure;
 
@@ -37,7 +38,6 @@ public class CustomerController : ControllerBase
         {
             return BadRequest();
         }
-
         customers = _customerRepo.SearchCustomerById(customerId);
         return Ok(customers);
     }
@@ -61,10 +61,32 @@ public class CustomerController : ControllerBase
 
         if (_customerRepo.SearchCustomerById(customerId).Count() == 0)
         {
-            return BadRequest();
+            return BadRequest("The customer does not exist.");
         }
 
         _customerRepo.DeleteCustomer(customerId);
         return Ok();
+    }
+
+    [HttpPut]
+    public IActionResult UpdateCustomerById(int customerId, Customer data)
+    {
+        IEnumerable<Customer> customers;
+
+        if (_customerRepo.SearchCustomerById(customerId).Count() == 0)
+        {
+            return BadRequest();
+        }
+
+        if (!ModelState.IsValid)
+        {
+            return BadRequest();
+        }
+
+        _customerRepo.UpdateCustomer(customerId, data);
+        
+        return Ok();
+
+
     }
 }
