@@ -17,9 +17,9 @@ public class Customer
     public string LastName { get; set; } = string.Empty;
 
     [MaxLength(20)]
-    public string MiddleName { get; set; } = string.Empty;
-
-    public string FullName => $"{LastName}, {FirstName} {MiddleName[..1]}.";
+    public string? MiddleName { get; set; }
+    
+    public string? FullName { get; set; }
 
     [Required]
     [CustomDateValidation]

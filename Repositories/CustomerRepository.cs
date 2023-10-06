@@ -51,6 +51,7 @@ public class CustomerRepository : ICustomerRepository
         temp.FirstName = data.FirstName;
         temp.LastName = data.LastName;
         temp.MiddleName = data.MiddleName;
+        temp.FullName = data.FullName;
         
         _dbContext.SaveChanges();
     }
