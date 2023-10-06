@@ -50,12 +50,23 @@ public class AccountRepository : IAccountRepository
                                                    .Where(a => a.CustomerId == customerId)
                                                    .ToList();
 
+        var tempFullName = string.Empty;
+
+        if (string.IsNullOrEmpty(customer.MiddleName)){
+            tempFullName = string.Concat(customer.LastName, ", ", customer.FirstName);
+        }
+        else {
+            tempFullName = string.Concat(customer.LastName, ", ", customer.FirstName, " ", customer.MiddleName[..1], ".");
+        } 
+
         // Combine results
         IEnumerable<CustomerAccounts> result = new List<CustomerAccounts> {
             new CustomerAccounts {
+                Id = customer.Id,
                 FirstName = customer.FirstName,
                 LastName = customer.LastName,
                 MiddleName = customer.MiddleName,
+                FullName = tempFullName,
                 DateOfBirth = customer.DateOfBirth,
                 IsFilipino = customer.IsFilipino,
                 AccountRecords = accounts

@@ -1,15 +1,18 @@
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 
 [ApiController]
 [Route("[controller]")]
 public class CustomerController : ControllerBase
 {
     private readonly ICustomerRepository _customerRepo;
+    private readonly IAccountRepository _accountRepo;
 
-    public CustomerController(ICustomerRepository customerRepo)
+    public CustomerController(ICustomerRepository customerRepo, IAccountRepository accountRepo)
     {
         _customerRepo = customerRepo;
+        _accountRepo = accountRepo;
     }
 
     [HttpGet]
@@ -44,6 +47,13 @@ public class CustomerController : ControllerBase
     {
         if (ModelState.IsValid)
         {
+            if (string.IsNullOrEmpty(customer.MiddleName)){
+                customer.FullName = string.Concat(customer.LastName, ", ", customer.FirstName);
+            }
+            else {
+                customer.FullName = string.Concat(customer.LastName, ", ", customer.FirstName, " ", customer.MiddleName[..1], ".");
+            }
+        
             _customerRepo.CreateCustomer(customer);
             return Ok();
         }
@@ -59,12 +69,19 @@ public class CustomerController : ControllerBase
             return BadRequest("The customer does not exist.");
         }
 
+        // Commented for now since it's not part of the requirement.
+        // This will prevent deletion if customer has existing accounts.
+        // if (_accountRepo.GetAllCustomerAccounts(customerId).Count() > 0)
+        // {
+        //     return BadRequest("Delete failed. Customer has existing accounts.");
+        // }
+
         _customerRepo.DeleteCustomer(customerId);
         return Ok();
     }
 
     [HttpPut]
-    public IActionResult UpdateCustomerById(int customerId, Customer data)
+    public IActionResult UpdateCustomerById(int customerId, Customer customer)
     {
         if (_customerRepo.SearchCustomerById(customerId).Count() == 0)
         {
@@ -76,7 +93,14 @@ public class CustomerController : ControllerBase
             return BadRequest();
         }
 
-        _customerRepo.UpdateCustomerById(customerId, data);
+        if (string.IsNullOrEmpty(customer.MiddleName)){
+            customer.FullName = string.Concat(customer.LastName, ", ", customer.FirstName);
+        }
+        else {
+            customer.FullName = string.Concat(customer.LastName, ", ", customer.FirstName, " ", customer.MiddleName[..1], ".");
+        }
+
+        _customerRepo.UpdateCustomerById(customerId, customer);
         
         return Ok();
     }
