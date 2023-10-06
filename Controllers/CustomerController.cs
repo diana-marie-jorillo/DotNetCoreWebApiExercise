@@ -57,8 +57,6 @@ public class CustomerController : ControllerBase
     [HttpDelete("{customerId}")]
     public IActionResult DeleteCustomer(int customerId)
     {
-        IEnumerable<Customer> customers;
-
         if (_customerRepo.SearchCustomerById(customerId).Count() == 0)
         {
             return BadRequest("The customer does not exist.");
@@ -71,8 +69,6 @@ public class CustomerController : ControllerBase
     [HttpPut]
     public IActionResult UpdateCustomerById(int customerId, Customer data)
     {
-        IEnumerable<Customer> customers;
-
         if (_customerRepo.SearchCustomerById(customerId).Count() == 0)
         {
             return BadRequest();
