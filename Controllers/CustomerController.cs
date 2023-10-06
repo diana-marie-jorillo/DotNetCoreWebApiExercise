@@ -1,8 +1,5 @@
 
-using System.Net;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.JSInterop.Infrastructure;
 
 [ApiController]
 [Route("[controller]")]
