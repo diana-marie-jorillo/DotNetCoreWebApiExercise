@@ -42,7 +42,7 @@ public class CustomerRepository : ICustomerRepository
         _dbContext.SaveChanges();
     }
 
-    public void UpdateCustomerById(int customerId, Customer data)
+    public void UpdateCustomerById(int customerId, Customer? data)
     {
         var temp = _dbContext.Customers.Where(c => c.Id == customerId).FirstOrDefault();
 
@@ -52,6 +52,6 @@ public class CustomerRepository : ICustomerRepository
         temp.LastName = data.LastName;
         temp.MiddleName = data.MiddleName;
         
-        
+        _dbContext.SaveChanges();
     }
 }

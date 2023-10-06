@@ -83,10 +83,8 @@ public class CustomerController : ControllerBase
             return BadRequest();
         }
 
-        _customerRepo.UpdateCustomer(customerId, data);
+        _customerRepo.UpdateCustomerById(customerId, data);
         
         return Ok();
-
-
     }
 }

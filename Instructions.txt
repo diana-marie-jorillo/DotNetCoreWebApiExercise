@@ -1,0 +1,49 @@
+
+Create two tables named Customer and Accounts with the following fields:
+
+For the Customer:
+- Id (Primary Key with auto increment)
+- First Name (required and accepts up to 20 chars)
+- Last Name (required and accepts up to 20 chars)
+- Middle Name (optional and accepts up to 20 chars)
+- Full Name (derived from First Name, Last Name and MIddle Name with a format of "Last Name, First Name, Middle initial")
+- Date of Birth (required and should not accept a future date)
+- Age (this will be derived from date of birth)
+- isFilipino (required and should only accept a true/false bool value)
+
+For the Accounts:
+
+- Id (Primary Key with auto increment)
+- CustomerId (FK)
+- Account Number (required and should only accept up to 12 digits)
+- Account Type (this should be an enum in the program and should only accept an account type of "Savings" and "Checking" account type)
+- Branch Address (required and accepts up to 50 chars)
+- InitialDeposit (required and should be decimal and can only accept a max amount of up to 1,000,000)
+
+Based on the tables above, we expect you to create a CRUD (POST / PUT / DELETE / GET) Rest APIs that apply the validations/fields I have mentioned.
+
+Here are the additional requirements that are related to the API endpoints that you will be creating:
+
+Customer API Endpoints
+
+1) There should be an API endpoint for creating a new Customer (POST Customer)
+2) There should be an API endpoint for updating an existing Customer based on the CustomerId parameter (if the Customer doesn't exist, return an error with HTTP Status Code 400)
+3) There should be an API endpoint for deleting an existing Customer based on the CustomerId parameter (if the Customer doesn't exist, return an error with HTTP Status Code 400)
+4) There should be an API endpoint for fetching all the Customers
+5) There should be an API endpoint for fetching a specific Customer (based on the CustomerId parameter); if the Customer doesn't exist, please return an HTTP Status Code 400 with an error of "The customer does not exist."
+
+Account API Endpoints
+
+6) There should be an API endpoint for creating an account for an existing Customer
+7) There should be an API endpoint for updating the account details based on the AccountId parameter, excluding the initialDeposit field
+8) There should be an API endpoint for deleting an account for the specific Customer
+9) There should be an API endpoint for fetching all the accounts of a specific Customer, based on the customer id field (All customer fields and account fields should be returned as a response)
+10) There should be an API endpoint for fetching all the accounts of all Customers
+
+The below endpoints are "nice to have". If you can create them, then much better:
+
+1) Create an API endpoint for the Customer Accounts with pageNumber and pageSize as a query parameters and only fetch what is needed (page number and page size)
+2) Create an API endpoint that uses a stored procedure
+3) Create an API endpoint with rate limiting
+4) Create an API endpoint with the caching mechanism
+
