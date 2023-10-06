@@ -1,8 +1,5 @@
 
-using System.Net;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.JSInterop.Infrastructure;
 
 [ApiController]
 [Route("[controller]")]
@@ -36,7 +33,7 @@ public class CustomerController : ControllerBase
 
         if (_customerRepo.SearchCustomerById(customerId).Count() == 0)
         {
-            return BadRequest();
+            return BadRequest("The customer does not exist.");
         }
         customers = _customerRepo.SearchCustomerById(customerId);
         return Ok(customers);
@@ -57,8 +54,6 @@ public class CustomerController : ControllerBase
     [HttpDelete("{customerId}")]
     public IActionResult DeleteCustomer(int customerId)
     {
-        IEnumerable<Customer> customers;
-
         if (_customerRepo.SearchCustomerById(customerId).Count() == 0)
         {
             return BadRequest("The customer does not exist.");
@@ -71,8 +66,6 @@ public class CustomerController : ControllerBase
     [HttpPut]
     public IActionResult UpdateCustomerById(int customerId, Customer data)
     {
-        IEnumerable<Customer> customers;
-
         if (_customerRepo.SearchCustomerById(customerId).Count() == 0)
         {
             return BadRequest();
