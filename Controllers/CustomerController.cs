@@ -7,7 +7,7 @@ using Microsoft.Identity.Client;
 public class CustomerController : ControllerBase
 {
     private readonly ICustomerRepository _customerRepo;
-    private readonly IAccountRepository _accountRepo;
+    //private readonly IAccountRepository _accountRepo;
 
     public CustomerController(ICustomerRepository customerRepo, IAccountRepository accountRepo)
     {
