@@ -36,7 +36,7 @@ public class CustomerController : ControllerBase
 
         if (_customerRepo.SearchCustomerById(customerId).Count() == 0)
         {
-            return BadRequest();
+            return BadRequest("The customer does not exist.");
         }
         customers = _customerRepo.SearchCustomerById(customerId);
         return Ok(customers);
