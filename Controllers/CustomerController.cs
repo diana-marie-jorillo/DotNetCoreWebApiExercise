@@ -9,10 +9,11 @@ public class CustomerController : ControllerBase
     private readonly ICustomerRepository _customerRepo;
     //private readonly IAccountRepository _accountRepo;
 
-    public CustomerController(ICustomerRepository customerRepo, IAccountRepository accountRepo)
+    //public CustomerController(ICustomerRepository customerRepo, IAccountRepository accountRepo)
+    public CustomerController(ICustomerRepository customerRepo)
     {
         _customerRepo = customerRepo;
-        _accountRepo = accountRepo;
+        //_accountRepo = accountRepo;
     }
 
     [HttpGet]
