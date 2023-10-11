@@ -11,8 +11,8 @@ public class Accounts
     public int CustomerId { get; set; }
 
     [Required]
-    [MaxLength(12,ErrorMessage ="Account Number must not be more than 12 digits.")]
-    public string AccountNumber { get; set; } = string.Empty;
+    [Range(1,999999999999, ErrorMessage ="Account Number must be 12 digits only.")]
+    public double AccountNumber { get; set; }
 
     public AccountTypes AccountType { get; set; } = AccountTypes.Savings;
 
