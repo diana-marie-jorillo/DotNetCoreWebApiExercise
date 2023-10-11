@@ -1,4 +1,5 @@
 
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
 
@@ -7,13 +8,16 @@ using Microsoft.Identity.Client;
 public class CustomerController : ControllerBase
 {
     private readonly ICustomerRepository _customerRepo;
+    private readonly IMapper _mapper;
     //private readonly IAccountRepository _accountRepo;
 
     //public CustomerController(ICustomerRepository customerRepo, IAccountRepository accountRepo)
-    public CustomerController(ICustomerRepository customerRepo)
+    public CustomerController(ICustomerRepository customerRepo,
+                              IMapper mapper)
     {
         _customerRepo = customerRepo;
         //_accountRepo = accountRepo;
+        _mapper = mapper;
     }
 
     [HttpGet]
