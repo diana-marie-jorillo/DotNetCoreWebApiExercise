@@ -119,14 +119,18 @@ public class CustomerController : ControllerBase
             return BadRequest();
         }
 
-        //var request = _mapper.Map<JsonPatchDocument<Customer>>(patch);
-        var request = _mapper.Map<CustomerRequestDTO>(patch);
-        patch.ApplyTo(request);
+        // Convert customerToPatch (Customer) to CustomerRequestDTO
+        var dataToUpdate = _mapper.Map<CustomerRequestDTO>(customerToPatch);
 
-        _dbContext.Update(request);
+        // Apply changes from JsonPatchDocument
+        patch.ApplyTo(dataToUpdate);
+
+        // Convert dataToUpdate(CustomerRequestDTO) back to Customer (customerToPatch) and apply changes.
+        var updateRequest = _mapper.Map(dataToUpdate, customerToPatch);
+
+        _dbContext.Update(updateRequest);
         _dbContext.SaveChanges();
-
-
+   
         return Ok();
     }
 }

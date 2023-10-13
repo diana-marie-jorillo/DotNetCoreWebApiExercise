@@ -26,7 +26,5 @@ public class ApiProfile : Profile
 
         CreateMap<Customer, CustomerResponseDto>();
 
-        CreateMap<JsonPatchDocument<Customer>, JsonPatchDocument<CustomerRequestDTO>>().ReverseMap();
-        
     }
 }
