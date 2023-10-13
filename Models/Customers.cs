@@ -19,7 +19,7 @@ public class Customer
     [MaxLength(20)]
     public string? MiddleName { get; set; }
     
-    public string? FullName { get; set; }
+    //public string? FullName { get; set; }
 
     [Required]
     [CustomDateValidation]

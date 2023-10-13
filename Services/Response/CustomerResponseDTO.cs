@@ -3,11 +3,12 @@ using System.Diagnostics;
 
 // Used to return responses from the API.
 // For generation, use Customer model.
-public class CustomerDto
+public class CustomerResponseDto
 {
-    public string LastName { get; set; } =  string.Empty;
+    public int Id { get; set; }
+    public string LastName { get; set; }
 
-    public string FirstName { get; set; } = string.Empty;
+    public string FirstName { get; set; }
 
     public string? MiddleName { get; set; }
 

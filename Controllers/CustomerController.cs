@@ -1,4 +1,7 @@
 
+using AutoMapper;
+using bdowebapi.Migrations;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
 
@@ -7,14 +10,18 @@ using Microsoft.Identity.Client;
 public class CustomerController : ControllerBase
 {
     private readonly ICustomerRepository _customerRepo;
-    //private readonly IAccountRepository _accountRepo;
+    private readonly IMapper _mapper;
 
-    //public CustomerController(ICustomerRepository customerRepo, IAccountRepository accountRepo)
-    public CustomerController(ICustomerRepository customerRepo)
+    public readonly ApiDbContext _dbContext;
+
+    public CustomerController(ICustomerRepository customerRepo,
+                              IMapper mapper, ApiDbContext dbContext)
     {
         _customerRepo = customerRepo;
-        //_accountRepo = accountRepo;
+        _mapper = mapper;
+        _dbContext = dbContext;
     }
+   
 
     [HttpGet]
     public IActionResult GetCustomers() 
@@ -27,7 +34,17 @@ public class CustomerController : ControllerBase
         }
 
         customers = _customerRepo.GetCustomers();
-        return Ok(customers);
+        var response = _mapper.Map<IEnumerable<CustomerResponseDto>>(customers);
+
+        foreach(var item in response)
+        {
+            item.FullName = string.IsNullOrEmpty(item.MiddleName) ? string.Concat(item.LastName, ", ", item.FirstName)
+                                                                  : string.Concat(item.LastName, ", ", item.FirstName, " ", item.MiddleName.Substring(0,1), ".");
+            item.DateOfBirth = item.DateOfBirth.Date;
+        }
+        
+
+        return Ok(response);
     }
 
     [HttpGet("{customerId}")]
@@ -40,22 +57,25 @@ public class CustomerController : ControllerBase
             return BadRequest("The customer does not exist.");
         }
         customers = _customerRepo.SearchCustomerById(customerId);
-        return Ok(customers);
+        var response = _mapper.Map<IEnumerable<CustomerResponseDto>>(customers);
+
+        foreach(var item in response)
+        {
+            item.FullName = string.IsNullOrEmpty(item.MiddleName) ? string.Concat(item.LastName, ", ", item.FirstName)
+                                                                  : string.Concat(item.LastName, ", ", item.FirstName, " ", item.MiddleName.Substring(0,1), ".");
+            item.DateOfBirth = item.DateOfBirth.Date;
+        }
+
+        return Ok(response);
     }
 
     [HttpPost]
-    public IActionResult CreateCustomer(Customer customer)
+    public IActionResult CreateCustomer(CustomerRequestDTO customer)
     {
         if (ModelState.IsValid)
         {
-            if (string.IsNullOrEmpty(customer.MiddleName)){
-                customer.FullName = string.Concat(customer.LastName, ", ", customer.FirstName);
-            }
-            else {
-                customer.FullName = string.Concat(customer.LastName, ", ", customer.FirstName, " ", customer.MiddleName[..1], ".");
-            }
-        
-            _customerRepo.CreateCustomer(customer);
+            var request = _mapper.Map<Customer>(customer);
+            _customerRepo.CreateCustomer(request);
             return Ok();
         }
 
@@ -81,28 +101,36 @@ public class CustomerController : ControllerBase
         return Ok();
     }
 
-    [HttpPut]
-    public IActionResult UpdateCustomerById(int customerId, Customer customer)
+    /// <summary>
+    /// Update one or more Customer details
+    /// </summary>
+    /// <param name="customerId">The Customer ID</param>
+    /// <param name="patch">The change request</param>
+    /// <returns></returns>
+    [HttpPatch("{customerId}")]
+    public IActionResult UpdateCustomerById(int customerId, 
+                                           [FromBody] JsonPatchDocument<CustomerRequestDTO> patch)
     {
-        if (_customerRepo.SearchCustomerById(customerId).Count() == 0)
+        // check if customer exists in database
+        var customerToPatch = _customerRepo.SearchCustomerById(customerId).FirstOrDefault();
+
+        if (customerToPatch == null || !ModelState.IsValid)
         {
             return BadRequest();
         }
 
-        if (!ModelState.IsValid)
-        {
-            return BadRequest();
-        }
+        // Convert customerToPatch (Customer) to CustomerRequestDTO
+        var dataToUpdate = _mapper.Map<CustomerRequestDTO>(customerToPatch);
 
-        if (string.IsNullOrEmpty(customer.MiddleName)){
-            customer.FullName = string.Concat(customer.LastName, ", ", customer.FirstName);
-        }
-        else {
-            customer.FullName = string.Concat(customer.LastName, ", ", customer.FirstName, " ", customer.MiddleName[..1], ".");
-        }
+        // Apply changes from JsonPatchDocument
+        patch.ApplyTo(dataToUpdate);
 
-        _customerRepo.UpdateCustomerById(customerId, customer);
-        
+        // Convert dataToUpdate(CustomerRequestDTO) back to Customer (customerToPatch) and apply changes.
+        var updateRequest = _mapper.Map(dataToUpdate, customerToPatch);
+
+        _dbContext.Update(updateRequest);
+        _dbContext.SaveChanges();
+   
         return Ok();
     }
 }
