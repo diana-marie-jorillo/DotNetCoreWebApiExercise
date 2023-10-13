@@ -1,8 +1,10 @@
-1. Don't include ID field in POST and PUT - put in DTO
-2. Don't include Fullname in the customer controller request body
+1. Don't include ID field in POST and PUT 
+    - Customer - done
+    - Account - 
+2. Don't include Fullname in the customer controller request body - done
 3. Add relationship between Customer and Account table - ??
 4. Translate account type to either Savings or Current
-5. Validation for Account Type input - done
+5. Validation for Account Number input - done
 6. Add DTO - done
     - install AutoMapper - done
     - map models with respective DTOs - done
