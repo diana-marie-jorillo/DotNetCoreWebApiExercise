@@ -64,5 +64,7 @@ public class ApiProfile : Profile
                 dest.InitialDeposit,
                 opt => opt.MapFrom(src => src.InitialDeposit))
             .ReverseMap();
+
+        CreateMap<CustomerAccounts, CustomerAccountResponseDto>().ReverseMap();
     }
 }

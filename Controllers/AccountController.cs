@@ -29,7 +29,12 @@ public class AccountController : ControllerBase
     {
         if (_customerRepo.SearchCustomerById(customerId).Count() == 0 || !ModelState.IsValid)
         {
-            return BadRequest();
+            return BadRequest("Customer does not exist.");
+        }
+
+        if (!Enum.IsDefined(typeof(AccountTypes),account.AccountType))
+        {
+            return BadRequest("Account Type does not exist.");
         }
 
         var request = _mapper.Map<Accounts>(account);
@@ -91,12 +96,6 @@ public class AccountController : ControllerBase
 
         var response = _mapper.Map<IEnumerable<AccountResponseDTO>>(accounts);
 
-        // foreach (var item in response)
-        // {
-        //     item.AccountType = item.AccountType == "1" ? AccountTypes.Savings.GetDisplayName() 
-        //                                                : AccountTypes.Checking.GetDisplayName();
-        // }
-
         return Ok(response);
     }
 
@@ -108,7 +107,10 @@ public class AccountController : ControllerBase
             return BadRequest("Customer does not exist.");
         }
 
-        var request = _accountRepo.GetAllCustomerAccounts(customerId);
+        var customerAccounts = _accountRepo.GetAllCustomerAccounts(customerId);
+
+        var request = _mapper.Map<IEnumerable<CustomerAccountResponseDto>>(customerAccounts);
+
         return Ok(request);
     }
 

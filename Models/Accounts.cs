@@ -15,7 +15,7 @@ public class Accounts
     [Range(1,999999999999, ErrorMessage ="Account Number must be 12 digits only.")]
     public double AccountNumber { get; set; }
 
-    public AccountTypes AccountType { get; set; } = AccountTypes.Savings;
+    public AccountTypes AccountType { get; set; } 
 
     [Required]
     [MaxLength(50,ErrorMessage ="Branch address should not be more than 50 characters.")]

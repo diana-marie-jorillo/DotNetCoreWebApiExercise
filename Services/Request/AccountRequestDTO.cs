@@ -1,9 +1,11 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore.Storage;
 
 public class AccountRequestDto
 {
+    [ForeignKey("CustomerId")]
     public int CustomerId { get; set; }
 
     [Required]
