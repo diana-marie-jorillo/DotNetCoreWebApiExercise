@@ -26,5 +26,45 @@ public class ApiProfile : Profile
 
         CreateMap<Customer, CustomerResponseDto>();
 
+        CreateMap<Accounts, AccountRequestDto>()
+            .ForMember(dest =>
+                dest.CustomerId,
+                opt => opt.MapFrom(src => src.CustomerId))
+            .ForMember(dest =>
+                dest.AccountNumber,
+                opt => opt.MapFrom(src => src.AccountNumber))
+            .ForMember(dest =>
+                dest.AccountType,
+                opt => opt.MapFrom(src => src.AccountType))
+            .ForMember(dest =>
+                dest.BranchAddress,
+                opt => opt.MapFrom(src => src.BranchAddress))
+            .ForMember(dest =>
+                dest.InitialDeposit,
+                opt => opt.MapFrom(src => src.InitialDeposit))
+            .ReverseMap();
+        
+        CreateMap<Accounts,AccountResponseDTO>()
+            .ForMember(dest =>
+                dest.Id,
+                opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest =>
+                dest.CustomerId,
+                opt => opt.MapFrom(src => src.CustomerId))
+            .ForMember(dest =>
+                dest.AccountNumber,
+                opt => opt.MapFrom(src => src.AccountNumber))
+            .ForMember(dest =>
+                dest.AccountType,
+                opt => opt.MapFrom(src => src.AccountType))
+            .ForMember(dest =>
+                dest.BranchAddress,
+                opt => opt.MapFrom(src => src.BranchAddress))
+            .ForMember(dest =>
+                dest.InitialDeposit,
+                opt => opt.MapFrom(src => src.InitialDeposit))
+            .ReverseMap();
+
+        CreateMap<CustomerAccounts, CustomerAccountResponseDto>().ReverseMap();
     }
 }

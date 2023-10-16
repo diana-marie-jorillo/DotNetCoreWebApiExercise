@@ -2,6 +2,8 @@
 using Azure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.JsonPatch;
+using AutoMapper;
+using Microsoft.OpenApi.Extensions;
 
 [ApiController]
 [Route("[controller]")]
@@ -10,25 +12,33 @@ public class AccountController : ControllerBase
     private readonly IAccountRepository _accountRepo;
     private readonly ICustomerRepository _customerRepo;
     private readonly ApiDbContext _dbContext;
+    private readonly IMapper _mapper;
 
     public AccountController(IAccountRepository accountRepo, ICustomerRepository customerRepo, 
-                             ApiDbContext dbContext)
+                             ApiDbContext dbContext, IMapper mapper)
     {
         _accountRepo = accountRepo;
         _customerRepo = customerRepo;
         _dbContext = dbContext;
+        _mapper = mapper;
     }
 
     [HttpPost]
     [Route("CreateAccount")]
-    public IActionResult CreateAccount(Accounts account)
+    public IActionResult CreateAccount(AccountRequestDto account, int customerId)
     {
-        if(!ModelState.IsValid)
+        if (_customerRepo.SearchCustomerById(customerId).Count() == 0 || !ModelState.IsValid)
         {
-            return BadRequest();
+            return BadRequest("Customer does not exist.");
         }
 
-        _accountRepo.CreateAccount(account);
+        if (!Enum.IsDefined(typeof(AccountTypes),account.AccountType))
+        {
+            return BadRequest("Account Type does not exist.");
+        }
+
+        var request = _mapper.Map<Accounts>(account);
+        _accountRepo.CreateAccount(request);
         return Ok();
        
     }
@@ -83,7 +93,10 @@ public class AccountController : ControllerBase
         }
 
         accounts = _accountRepo.GetAllAccounts();
-        return Ok(accounts);
+
+        var response = _mapper.Map<IEnumerable<AccountResponseDTO>>(accounts);
+
+        return Ok(response);
     }
 
     [HttpGet("{customerId}")]
@@ -94,7 +107,10 @@ public class AccountController : ControllerBase
             return BadRequest("Customer does not exist.");
         }
 
-        var request = _accountRepo.GetAllCustomerAccounts(customerId);
+        var customerAccounts = _accountRepo.GetAllCustomerAccounts(customerId);
+
+        var request = _mapper.Map<IEnumerable<CustomerAccountResponseDto>>(customerAccounts);
+
         return Ok(request);
     }
 
