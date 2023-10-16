@@ -1,5 +1,5 @@
 Version 1.0
-GitHub repository: https://github.com/diana-marie-jorillo/BDOWebApi
+GitHub repository: https://github.com/diana-marie-jorillo/DotNetCoreWebApiExercise
 Private repository; please contact diana-marie.jorillo@capgemini.com for access request and include your email address.
 
 ============================
