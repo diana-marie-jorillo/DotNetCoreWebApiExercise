@@ -1,2 +1,0 @@
-3. Add relationship between Customer and Account table - ??
-4. Translate account type to either Savings or Current
